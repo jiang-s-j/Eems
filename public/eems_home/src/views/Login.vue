@@ -74,7 +74,7 @@ export default {
   methods: {
     login () {
       this.$axios
-        .post('http://127.0.0.1:8012/admin/index/log_in', {
+        .post('http://127.0.0.1:8012/index/log_in', {
           account: this.ruleForm.pass,
           password: this.ruleForm.checkPass
         })
@@ -88,7 +88,7 @@ export default {
             alert(res.data.message)
             console.log(res.data.code)
           }
-          // console.log(res.data.account);
+          // console.log(res.data.account)
         })
       // alert(this.ruleForm.account)
     }
