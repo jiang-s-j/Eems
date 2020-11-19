@@ -2,14 +2,20 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Axios from 'axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-Vue.use(ElementUI)
-Vue.prototype.$axios = Axios
-
 Vue.config.productionTip = false
+Vue.use(ElementUI)
+
+router.beforeEach((to, from, next) => {
+  document.title = `${to.meta.title}`
+  const role = localStorage.getItem('admin_name')
+  if (!role && to.path !== '/login') {
+    next('/login')
+  }
+  next()
+})
 
 new Vue({
   router,
