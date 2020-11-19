@@ -4,7 +4,11 @@
 namespace app\model;
 
 
-class recruitmentModel
-{
+use think\Model;
 
+class recruitmentModel extends Model
+{
+    protected $table = 'eems_recruitment';
+    protected $pk = 'id';
+    protected $connection = 'mysql';
 }
