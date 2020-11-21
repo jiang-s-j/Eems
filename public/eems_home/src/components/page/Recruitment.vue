@@ -19,7 +19,7 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">搜索</el-button>
+            <el-button :disabled="loading" type="primary" @click="submitForm('ruleForm')">搜索</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -31,6 +31,7 @@
       </div>
       <div class="text item">
         <el-table
+          v-loading="loading"
           :data="tableData"
           stripe
           style="width: 100%">
@@ -43,6 +44,14 @@
             prop="status"
             label="招聘状态"
             width="180">
+            <template slot-scope="scope">
+              <div v-if="scope.row.status === '正在招聘'">
+                <el-tag size="medium" type="success">{{ scope.row.status }}</el-tag>
+              </div>
+              <div v-else>
+                <el-tag size="medium">{{ scope.row.status }}</el-tag>
+              </div>
+            </template>
           </el-table-column>
           <el-table-column
             prop="location"
@@ -51,6 +60,7 @@
         </el-table>
       </div>
       <el-pagination
+        :disabled = 'loading'
         background
         layout="prev, pager, next"
         @current-change="onCurrentChange"
@@ -83,13 +93,15 @@ export default {
         ]
       },
       page: 1,
-      count: 0
+      count: 0,
+      loading: false
     }
   },
   methods: {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.loading = true
           getRecruitment({
             status: this.ruleForm.resource,
             location: this.ruleForm.region,
@@ -98,6 +110,7 @@ export default {
             // console.log(res)
             this.count = res.count
             this.tableData = res.data
+            this.loading = false
           })
         } else {
           console.log('error submit!!')
@@ -109,7 +122,7 @@ export default {
       this.$refs[formName].resetFields()
     },
     onCurrentChange (page) {
-      // console.log(page)
+      this.loading = true
       this.page = page
       getRecruitment({
         status: this.ruleForm.resource,
@@ -119,6 +132,7 @@ export default {
         // console.log(res)
         this.count = res.count
         this.tableData = res.data
+        this.loading = false
       })
     }
   }
